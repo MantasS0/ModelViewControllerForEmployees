@@ -1,10 +1,12 @@
 package lt.bit.java2.spring.mvc.services;
 
 import lt.bit.java2.spring.mvc.Employee;
-import lt.bit.java2.spring.mvc.services.EmployeeRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.Iterator;
+import java.util.List;
 
 @Service
 public class EmployeeService {
@@ -15,20 +17,25 @@ public class EmployeeService {
     EmployeeRowMapper employeeRowMapper;
 
     public Employee getEmployeeById(int id) {
-//        Employee employee = new Employee();
-//        employee.setEmpNo(id);
-//        employee.setFirstName("Jonas");
-//        employee.setLastName("Jonaitis");
-//        employee.setBirthDate(LocalDate.of(1986, 12, 20));
-//        employee.setHireDate(LocalDate.of(1999, 7, 1));
-//        employee.setGender(Gender.M);
-//        return employee;
-
-       Employee employee = jdbcTemplate.queryForObject(
-               "SELECT * FROM employees WHERE emp_no = ?",
-               employeeRowMapper,
-               id);
-       return employee;
+        Employee employee = jdbcTemplate.queryForObject(
+                "SELECT * FROM employees WHERE emp_no = ?",
+                employeeRowMapper,
+                id);
+        return employee;
 
     }
+
+    public List<Employee> getEmployeeList() {
+        List<Employee> employeeList = jdbcTemplate.query("SELECT * FROM employees LIMIT 10",
+                employeeRowMapper);
+
+        Iterator it = employeeList.iterator();
+        while (it.hasNext()) {
+            Employee e = (Employee) it.next();
+            System.out.println(e.getEmpNo() + " " + e.getFirstName() + " " + e.getLastName());
+        }
+
+        return employeeList;
+    }
+
 }

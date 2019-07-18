@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/employee")
 class EmployeeControler {
@@ -24,7 +26,10 @@ class EmployeeControler {
     }
 
     @GetMapping
-    String getEmployeesList() {
+    String getEmployeesList(ModelMap map) {
+        List<Employee> employeeList = employeeService.getEmployeeList();
+        map.addAttribute("employeeList",employeeList);
+
         return "employees-list";
     }
 }
