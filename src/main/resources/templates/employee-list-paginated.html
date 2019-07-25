@@ -90,6 +90,27 @@ last: checks if the current iteration is the last one
         <ul class="pagination"
             th:if="${employeePage.totalPages > 0}"
             th:each="pageNumber, iStat : ${pageNumbers}">
+
+            <li class="page-item"
+                th:if="${iStat.first}"
+                th:classappend="${employeePage.number==0} ? disabled : ''">
+                <span class="page-link" th:if="${employeePage.number==0}">← First</span>
+                <a class="page-link"
+                   th:if="!${employeePage.number==0}"
+                   th:href="@{/employee(size=${employeePage.size}, page=1)}">← First</a>
+            </li>
+
+            <li class="page-item"
+                th:if="${iStat.count==1}"
+                th:classappend="${employeePage.number==0} ? disabled : ''">
+                <span class="page-link" th:if="${employeePage.number==0}">«</span>
+                <a class="page-link"
+                   th:if="!${employeePage.number==0}"
+                   th:href="@{/employee(size=${employeePage.size}, page=${employeePage.number})}">«</a>
+            </li>
+
+            <!--Cia viekiantis bet skaiciuoja visus-->
+<!--
             <li class="page-item"
                 th:classappend="${pageNumber==employeePage.number + 1} ? active : ''">
                 <span class="page-link" th:if="${pageNumber==employeePage.number + 1}" th:text=${pageNumber}></span>
@@ -98,6 +119,94 @@ last: checks if the current iteration is the last one
                    th:href="@{/employee(size=${employeePage.size}, page=${pageNumber})}"
                    th:text=${pageNumber}></a>
             </li>
+-->
+
+
+
+            <li class="page-item"
+                th:if="${pageNumber==employeePage.number - 1}"
+                th:classappend="${pageNumber==employeePage.number + 1} ? active : ''">
+                <span class="page-link" th:if="${pageNumber==employeePage.number + 1}" th:text=${pageNumber}></span>
+                <a class="page-link"
+                   th:if="${pageNumber!=employeePage.number + 1}"
+                   th:href="@{/employee(size=${employeePage.size}, page=${pageNumber})}"
+                   th:text=${pageNumber}></a>
+            </li>
+
+
+            <li class="page-item"
+                th:if="${pageNumber==employeePage.number}"
+                th:classappend="${pageNumber==employeePage.number + 1} ? active : ''">
+                <span class="page-link" th:if="${pageNumber==employeePage.number + 1}" th:text=${pageNumber}></span>
+                <a class="page-link"
+                   th:if="${pageNumber!=employeePage.number + 1}"
+                   th:href="@{/employee(size=${employeePage.size}, page=${pageNumber})}"
+                   th:text=${pageNumber}></a>
+            </li>
+
+
+
+            <li class="page-item"
+                th:if="${pageNumber==employeePage.number + 1}"
+                th:classappend="${pageNumber==employeePage.number + 1} ? active : ''">
+                <span class="page-link" th:if="${pageNumber==employeePage.number + 1}" th:text=${pageNumber}></span>
+                <a class="page-link"
+                   th:if="${pageNumber!=employeePage.number + 1}"
+                   th:href="@{/employee(size=${employeePage.size}, page=${pageNumber})}"
+                   th:text=${pageNumber}></a>
+            </li>
+
+            <li class="page-item"
+                th:if="${pageNumber==employeePage.number + 2}"
+                th:classappend="${pageNumber==employeePage.number + 1} ? active : ''">
+                <span class="page-link" th:if="${pageNumber==employeePage.number + 1}" th:text=${pageNumber}></span>
+                <a class="page-link"
+                   th:if="${pageNumber!=employeePage.number + 1}"
+                   th:href="@{/employee(size=${employeePage.size}, page=${pageNumber})}"
+                   th:text=${pageNumber}></a>
+            </li>
+
+            <li class="page-item"
+                th:if="${pageNumber==employeePage.number + 3}"
+                th:classappend="${pageNumber==employeePage.number + 1} ? active : ''">
+                <span class="page-link" th:if="${pageNumber==employeePage.number + 1}" th:text=${pageNumber}></span>
+                <a class="page-link"
+                   th:if="${pageNumber!=employeePage.number + 1}"
+                   th:href="@{/employee(size=${employeePage.size}, page=${pageNumber})}"
+                   th:text=${pageNumber}></a>
+            </li>
+
+
+
+            <!--
+                        <li class="page-item"
+                            th:classappend="${pageNumber==employeePage.number + 1} ? active : ''">
+                            <span class="page-link" th:if="${pageNumber==employeePage.number + 1}" th:text=${pageNumber}></span>
+                            <a class="page-link"
+                               th:if="${pageNumber!=employeePage.number + 1}"
+                               th:href="@{/employee(size=${employeePage.size}, page=${pageNumber})}"
+                               th:text=${pageNumber}></a>
+                        </li>
+            -->
+
+            <li class="page-item"
+                th:if="${iStat.count==employeePage.totalPages}"
+                th:classappend="${employeePage.number==employeePage.totalPages-1} ? disabled : ''">
+                <span class="page-link" th:if="${employeePage.number==employeePage.totalPages-1}">»</span>
+                <a class="page-link"
+                   th:if="!${employeePage.number==employeePage.totalPages-1}"
+                   th:href="@{/employee(size=${employeePage.size}, page=${employeePage.number+2})}">»</a>
+            </li>
+
+            <li class="page-item"
+                th:if="${iStat.last}"
+                th:classappend="${employeePage.number==employeePage.totalPages-1} ? disabled : ''">
+                <span class="page-link" th:if="${employeePage.number==employeePage.totalPages-1}">Last →</span>
+                <a class="page-link"
+                   th:if="!${employeePage.number==employeePage.totalPages-1}"
+                   th:href="@{/employee(size=${employeePage.size}, page=${employeePage.totalPages})}">Last →</a>
+            </li>
+
         </ul>
     </nav>
 <!--

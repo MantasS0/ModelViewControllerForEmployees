@@ -30,7 +30,7 @@ public class EmployeeService{
     }
 
     public List<Employee> getEmployeeList() {
-        List<Employee> employeeList = jdbcTemplate.query("SELECT * FROM employees LIMIT 1000",
+        List<Employee> employeeList = jdbcTemplate.query("SELECT * FROM employees",
                 employeeRowMapper);
 
         return employeeList;
