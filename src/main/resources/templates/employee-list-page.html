@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>List of Employees</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <h1 class="text-center">List of Employees</h1>
+
+    <nav aria-label="Search results pages" class="d-md-flex flex-wrap justify-content-center">
+        <ul class="pagination"
+            th:if="${result.pageCount > 1}">
+
+            <li class="page-item"
+                th:classappend="${result.firstPage} ? disabled : ''">
+                <span class="page-link" th:if="${result.firstPage}">← First</span>
+                <a class="page-link"
+                   th:if="!${result.firstPage}"
+                   th:href="@{/employee(size=${result.pageSize}, page=1)}">← First</a>
+            </li>
+
+            <li class="page-item"
+                th:classappend="${result.firstPage} ? disabled : ''">
+                <span class="page-link" th:if="${result.firstPage}">«</span>
+                <a class="page-link"
+                   th:if="!${result.firstPage}"
+                   th:href="@{/employee(size=${result.pageSize}, page=${result.pageNumber - 1})}">«</a>
+            </li>
+
+            <li class="page-item"
+                th:each="number: ${#numbers.sequence(result.rangeFrom, result.rangeTo)}"
+                th:classappend="${number == result.pageNumber} ? disabled : ''">
+                <span class="page-link"
+                      th:if="${number == result.pageNumber}"
+                      th:text="${number}"></span>
+                <a class="page-link"
+                   th:if="!${number == result.pageNumber}"
+                   th:href="@{/employee(size=${result.pageSize}, page=${number})}"
+                   th:text="${number}"></a>
+            </li>
+
+            <li class="page-item"
+                th:classappend="${result.lastPage} ? disabled : ''">
+                <span class="page-link" th:if="${result.lastPage}">»</span>
+                <a class="page-link"
+                   th:if="!${result.lastPage}"
+                   th:href="@{/employee(size=${result.pageSize}, page=${result.pageNumber + 1})}">»</a>
+            </li>
+
+            <li class="page-item"
+                th:classappend="${result.lastPage} ? disabled : ''">
+                <span class="page-link" th:if="${result.lastPage}">Last →</span>
+                <a class="page-link"
+                   th:if="!${result.lastPage}"
+                   th:href="@{/employee(size=${result.pageSize}, page=${result.pageCount})}">Last →</a>
+            </li>
+
+        </ul>
+    </nav>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Emp No</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="employee : ${result.data}">
+            <td><a th:href="@{'/employee/' + ${employee.empNo}}" th:text="${employee.empNo}"></a></td>
+            <td th:text="${employee.firstName}"></td>
+            <td th:text="${employee.lastName}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
+
+
+</div>
+</body>
+</html>

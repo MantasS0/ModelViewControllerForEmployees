@@ -2,24 +2,25 @@ package lt.bit.java2.spring.mvc.services;
 
 import lt.bit.java2.spring.mvc.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
-public class EmployeeService{
+public class EmployeeService {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
     @Autowired
     EmployeeRowMapper employeeRowMapper;
 
+
+    /**
+     * Returns one Employee class object by empNo
+     * @param id Employee number (emp_no (in DB) or empNo (in Employee class))
+     * @return Returns one Employee class object by empNo
+     */
     public Employee getEmployeeById(int id) {
         Employee employee = jdbcTemplate.queryForObject(
                 "SELECT * FROM employees WHERE emp_no = ?",
@@ -29,31 +30,34 @@ public class EmployeeService{
 
     }
 
-    public List<Employee> getEmployeeList() {
-        List<Employee> employeeList = jdbcTemplate.query("SELECT * FROM employees",
-                employeeRowMapper);
-
-        return employeeList;
-    }
-
-    public Page<Employee> getEmployeePages(Pageable pageable){
-        List<Employee> employees = getEmployeeList();
-        int pageSize = pageable.getPageSize();
-        int currentPage = pageable.getPageNumber();
-        int startItem = currentPage * pageSize;
-
-        List<Employee> list;
-
-        if (employees.size() < startItem) {
-            list = Collections.emptyList();
-        } else {
-            int toIndex = Math.min(startItem + pageSize, employees.size());
-            list = employees.subList(startItem, toIndex);
+    /**
+     * Basic check for @param faults and limits pageSize to 100.
+     * Uses 2 queries to get the list of Employees from DB (only for current page)
+     * and to get total count of rows in DB table.
+     * Returns one page of Employee as PageResult<Employee>
+     *     PageResult class constructor also generates variables:
+     *     int pageCount,
+     *     boolean firstPage,
+     *     boolean lastPage,
+     *     int rangeFrom,
+     *     int rangeTo from given parameters.
+     * @param pageSize set page size (number of rows)
+     * @param pageNumber set page number (1..)
+     * @return Returns one page of Employee as PageResult<Employee>
+     */
+    public PageResult<Employee> getRequestedEmployeePage(int pageSize, int pageNumber) {
+        if (pageNumber < 1) {
+            pageNumber = 1;
         }
+        if (pageSize < 1) {
+            pageSize = 1;
+        }
+        else if (pageSize > 100) pageSize = 100;
+        List<Employee> employees = jdbcTemplate.query("SELECT * FROM employees LIMIT ? OFFSET ?", employeeRowMapper, pageSize, (pageNumber - 1) * pageSize);
+        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM employees", Integer.class);
+        int recordCount = count == null ? 0 : count;
 
-        Page<Employee> employeePage = new PageImpl<Employee>(list, PageRequest.of(currentPage, pageSize), employees.size());
-
-        return employeePage;
+        return new PageResult<>(pageSize, pageNumber, recordCount, employees);
     }
 
 
