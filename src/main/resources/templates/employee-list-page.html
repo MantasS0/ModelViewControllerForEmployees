@@ -32,7 +32,7 @@
 
             <li class="page-item"
                 th:each="number: ${#numbers.sequence(result.rangeFrom, result.rangeTo)}"
-                th:classappend="${number == result.pageNumber} ? disabled : ''">
+                th:classappend="${number == result.pageNumber} ? active : ''">
                 <span class="page-link"
                       th:if="${number == result.pageNumber}"
                       th:text="${number}"></span>
